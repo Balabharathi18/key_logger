@@ -1,19 +1,25 @@
 import smtplib as sm
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+from email.message import EmailMessage
 
-def mail_send(mail1_ID,passwd,rec_mail):
+def mail_send(maildetail):
+    msg=EmailMessage()
+    msg["from"]=maildetail[0]
+    msg["to"]=maildetail[1]
+    msg["subject"]="this is the sample program with attacment"
+    msg.set_content("mail with attachment!!!")
+    fp=open("logged.txt","rb")
+    data=fp.read()
+    msg.add_attachment(data,maintype="text",subtype="octet-stream",filename="log.txt")
     mail=sm.SMTP('smtp.gmail.com',587)
     mail.starttls()
-    mail.login(mail1_ID,passwd)
-    body="file attachment"
+    mail.login(maildetail[0],maildetail[1])
+    # body="helooo"
     try:
-        mail.sendmail(mail1_ID,rec_mail,body)
+        mail.sendmail(maildetail[0],maildetail[2],msg.as_string())
         print("msg sent")
     except:
         print("error occured")
     mail.quit()
     return
-# mail_send(mail_ID,passwd,rec_mail)
 
 
